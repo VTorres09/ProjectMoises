@@ -1,4 +1,9 @@
-# DECIBEL
-A novel system that utilizes multiple symbolic music representations in addition to audio in order to improve ace on popular music.
+# Chord Detection Algorithm
+A chord detection system that aims to detect the chord sequence in a song and its respective playing times, this project was created for the Moises
+Chord Detection Challenge, based on Decibel’s Algorithm, using Spotify Web API, Cifraclub website and youtube features.
 
-Documentation website: https://daphneo.github.io/DECIBEL
+https://www.cifraclub.com.br/
+
+https://spotipy.readthedocs.io/en/2.18.0/#getting-started
+
+https://pypi.org/project/youtube-search-python/

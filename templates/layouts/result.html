@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<body onload="myFunction()" style="margin:0;">
+    <div id = "loader" class="loader" style="margin-left: 38em"></div>
+    <div id = "loaderSub" ><h1 align="center">Predicting your song!</h1></div>
+
+    <div style="display:none;" id="myDiv" class="animate-bottom">
+      <h2>Tcharamm!</h2>
+      <p>See your results here...</p>
+    </div>
+
+  <script>
+    var myVar;
+
+  function myFunction() {
+    myVar = setTimeout(showPage, 5000);
+  }
+
+  function showPage() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("loaderSub").style.display = "none";
+    document.getElementById("myDiv").style.display = "block";
+  }
+  </script>
+</body>
+{% endblock %}

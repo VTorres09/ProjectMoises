@@ -1,0 +1,16 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row"></div>
+  <h1>Musicas na nossa biblioteca!</h1>
+  <h4>Ajude-nos! Selecione a de sua preferência e demonstre seu ouvido poderoso!</h4>
+{% for json in datalist %}
+  <div>
+    <p>{{json}}</p>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -13,21 +13,33 @@ def search(song):
     busca = song
     results = spotify.search(busca)
     main_result = results["tracks"]["items"][0]
-    videosSearch = VideosSearch(main_result["name"], limit=2)
+    videosSearch = VideosSearch(main_result["name"], limit=3)
     return [main_result["name"], videosSearch.result()["result"][0]["link"], main_result["artists"][0]["name"]]
 
+
+def searchHtml(song):
+    busca = song
+    results = spotify.search(busca)
+    main_result = results["tracks"]["items"][0]
+    videosSearch = VideosSearch(main_result["name"], limit=3)
+    print(videosSearch.result()['result'][0:3])
+    return [[videosSearch.result()["result"][0]['title'], videosSearch.result()["result"][0]["thumbnails"][0]['url'], videosSearch.result()["result"][0]["link"], videosSearch.result()["result"][0]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]],
+            [videosSearch.result()["result"][1]['title'], videosSearch.result()["result"][1]["thumbnails"][0]['url'], videosSearch.result()["result"][1]["link"], videosSearch.result()["result"][1]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]],
+             [videosSearch.result()["result"][2]['title'], videosSearch.result()["result"][2]["thumbnails"][0]['url'],videosSearch.result()["result"][2]["link"], videosSearch.result()["result"][2]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]]]
+
 def cifra_clubify(song, artist):
-    url = 'https://cifraclub.com.br/'
     artist = normalize(artist)
     song = normalize(song)
-    song = song.split("---")[0]
-    url += artist + '/'
-    url += song
-    return url
+    song = song.split("-")[0]
+    song = song.split("(")[0]
+    return song +" "+ artist
 
 def normalize(str):
     str = str.lower()
-    str = str.replace(' ', '-')
     str = str.replace('&', 'e')
+    str = str.replace("'", '')
+    str = str.replace(".", '')
+    str = str.replace("?", '')
     str = unidecode.unidecode(str)
     return str
+

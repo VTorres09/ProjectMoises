@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row"></div>
+  <h1>Selecione uma opção!</h1>
+  <h4>Lembrando que videos não oficiais possuem uma menor precisão.</h4>
+{% for data in datalist %}
+  <div>
+    <!--Pode mostrar outros dados-->
+    <a href={{data[0][2]}}> <img src={{data[0][1]}} width="300" height="150" style="margin-left: 2em"> </a>
+    <a href="{{data[1][2]}}"> <img src={{data[1][1]}} width="300" height="150" style="margin-left: 4em"> </a>
+    <a href={{data[2][2]}}> <img src={{data[2][1]}} width="300" height="150" style="margin-left: 6em" > </a>
+  </div>
+  <div>
+    <form method="post" action="/results">
+      <input type="submit" name="submit_button"  value="Select Option 1" class="btn btn-primary" id="select0" style="margin-left: 8em" href="/result/"></input>
+      <input type="submit" name="submit_button" value="Select Option 2" class="btn btn-primary" id="select1" style="margin-left: 16em" href="/result/"></input>
+      <input  type="submit" name="submit_button" value="Select Option 3" class="btn btn-primary" id="select2" style="margin-left: 18em" href="/result/"></input>
+    </form>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

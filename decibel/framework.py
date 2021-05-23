@@ -141,12 +141,14 @@ print("Visualisation finished!")
 training = False
 
 # Extra lines for testing purpose.
-def predictSong(urlsong: str, urltab: str):
+def predictSong(urlsong: str, search: str):
     URLSONG = urlsong
-    URLTAB = urltab
+    URLTAB = search
 
     # Download mp3 music file
     video = pafy.new(URLSONG)
+
+    # We can change for spotify ID
     title = video.title.replace(" ", "_")
     bestaudio = video.getbestaudio()
     MP3FILE = 'D:\Moises\DECIBEL\Data\Input\Audio' + "/" + str(title) + ".mp3"
@@ -155,7 +157,7 @@ def predictSong(urlsong: str, urltab: str):
 
     # Download tab music file
     download_tab(URLTAB, "D:\Moises\DECIBEL\Data\Input\Tabs", title + ".txt")
-    print("You have successfully downloaded the tab file")
+
 
     # If you want to change the audio path, you have to change "MP3FILE"
     test_song = Song(title, 'test', 'test', '', MP3FILE, '')
@@ -171,6 +173,7 @@ def predictSong(urlsong: str, urltab: str):
     # To run the data fusion correctly you have to have more than one tab
     data_fusion.data_fuse_song(song=test_song, chord_vocabulary=chord_vocabulary)
 
+    print('Prediction Finished!')
     # Study data fusion possibilities
     # data_fusion.data_fuse_song_with_actual_best_midi_and_tab(song=test_song, chord_vocabulary=chord_vocabulary)
 
@@ -178,7 +181,7 @@ def predictSong(urlsong: str, urltab: str):
 ########################
 #     GUI SETTINGS     #
 ########################
-
+"""
 root2 = tk.Tk()
 root2.geometry("600x500+0+0")
 root2.title("Multimidia Project")
@@ -215,11 +218,13 @@ txtupload = tk.Entry(f1, font=('Roboto', 10, 'bold'), bd=10, bg="grey", justify=
 txtupload.grid(row=0, column=1)
 
 """
+"""
 tab_url = PhotoImage(file='assets/tab_url.png')
 lbluptab = Label(f1, image=tab_url, fg="aquamarine", bd=10, anchor='w', borderwidth=0, justify='right')
 lbluptab.grid(row=1, column=0)
 txtuptab = Entry(f1, font=('Roboto', 10, 'bold'), bd=10, bg="grey", justify='left')
 txtuptab.grid(row=1, column=1)
+"""
 """
 
 space2 = PhotoImage(file='assets/space.png')
@@ -242,15 +247,19 @@ lblpredict.grid(row=5, column=0)
 
 def download():
     file = tk.filedialog.askopenfilename(initialdir=filehandler.OUTPUT_FOLDER, filetypes=(("json files", "*.json"), ("all files", "*.*")))
-    app = tk.Tk()
-    text = tk.Text(app)
-    text.pack()
-    f = open(file, )
-    data = json.load(f)
-    text.clipboard_append(str(data[0]['current_beat']))
-    f.close()
-    text.config(state=tk.DISABLED)
-    app.mainloop()
+    if file != '':
+        results = tk.Tk()
+        results.geometry("600x500+0+0")
+        results.title("Moises Chord Detection - Results")
+        results.configure(background='black')
+        text = tk.Text(results, bg="black", fg="white", height = 50)
+        text.pack()
+        f = open(file, 'r')
+        data = json.load(f)
+        text.insert("end-1c", str(json.dumps(data, indent=10)))
+        f.close()
+        text.config(state=tk.DISABLED)
+        results.mainloop()
 
 
 download1 = PhotoImage(file='assets/download.png')
@@ -267,3 +276,4 @@ iconLbl.grid(row=7, column=1)
 iconLbl.configure(background='black')
 
 root.mainloop()
+"""

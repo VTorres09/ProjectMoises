@@ -4,10 +4,13 @@ from the Internet.
 """
 
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from os import path
-
-def download_tab(tab_url: str, tab_directory: str, tab_name: str) -> (bool, str):
+from decibel.import_export.filehandler import _full_path_to
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+def download_tab(search: str, tab_directory: str, tab_name: str) -> (bool, str):
     """
     Download a tab file from the Internet, using the tab_url and place it in the tab_directory, called tab_name.
     Return a message indicating success or failure.
@@ -21,23 +24,32 @@ def download_tab(tab_url: str, tab_directory: str, tab_name: str) -> (bool, str)
         return False, None
 
     try:
-        browser = webdriver.Chrome(ChromeDriverManager().install())
-        browser.get(tab_url)
 
-        #tab_text = browser.find_element_by_xpath("//pre[@class='_3F2CP _1rDYL']").text
+        browser = webdriver.Chrome(executable_path=_full_path_to('chromedriver.exe', 'i'))
+        wait = WebDriverWait(browser, 10)
+        browser.get("https://www.cifraclub.com.br/")
+        element = browser.find_element_by_xpath('//*[@id="js-h-search"]')
+        element.send_keys(search)
+        element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="js-h-suggest"]/ul[1]/li[1]/a')))
+        element.click()
+        time.sleep(3)
         tab_text = browser.find_element_by_xpath("/html/body/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]").text
         # _3F2CP _1rDYL _3F2CP _1rDYL _3F2CP _3hukP
-        browser.close()
 
-        with open(target_path, 'w') as f:
-            f.write(tab_text)
+        if tab_text != '':
+            with open(target_path, 'w') as f:
+                f.write(tab_text)
+            print("You have successfully downloaded the tab file")
+        else:
+            print('We cannot download the tab file')
+
+        browser.close()
 
     except Exception:
         browser.quit()
-        return False, 'Error downloading ' + tab_name + ' on ' + tab_url
+        return False, 'Error downloading ' + tab_name + ' on CifraClub'
 
     return True, 'Download succeeded'
-
 
 def download_data_set_from_csv(csv_path: str, tab_directory: str):
     """
@@ -69,3 +81,4 @@ def download_data_set_from_csv(csv_path: str, tab_directory: str):
                 print(message)
 
     print(str(nr_successful) + ' tab files were downloaded successfully. ' + str(nr_unsuccessful) + ' failed.')
+

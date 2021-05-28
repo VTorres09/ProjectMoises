@@ -22,10 +22,9 @@ def searchHtml(song):
     results = spotify.search(busca)
     main_result = results["tracks"]["items"][0]
     videosSearch = VideosSearch(main_result["name"], limit=3)
-    print(videosSearch.result()['result'][0:3])
-    return [[videosSearch.result()["result"][0]['title'], videosSearch.result()["result"][0]["thumbnails"][0]['url'], videosSearch.result()["result"][0]["link"], videosSearch.result()["result"][0]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]],
-            [videosSearch.result()["result"][1]['title'], videosSearch.result()["result"][1]["thumbnails"][0]['url'], videosSearch.result()["result"][1]["link"], videosSearch.result()["result"][1]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]],
-             [videosSearch.result()["result"][2]['title'], videosSearch.result()["result"][2]["thumbnails"][0]['url'],videosSearch.result()["result"][2]["link"], videosSearch.result()["result"][2]['channel']['name'], main_result["name"], main_result["artists"][0]["name"]]]
+    return [[videosSearch.result()["result"][0]['title'], videosSearch.result()["result"][0]["thumbnails"][0]['url'], videosSearch.result()["result"][0]["link"], videosSearch.result()["result"][0]['channel']['name'], main_result["name"], main_result["artists"][0]["name"], videosSearch.result()["result"][0]['id']],
+            [videosSearch.result()["result"][1]['title'], videosSearch.result()["result"][1]["thumbnails"][0]['url'], videosSearch.result()["result"][1]["link"], videosSearch.result()["result"][1]['channel']['name'], main_result["name"], main_result["artists"][0]["name"], videosSearch.result()["result"][1]['id']],
+             [videosSearch.result()["result"][2]['title'], videosSearch.result()["result"][2]["thumbnails"][0]['url'],videosSearch.result()["result"][2]["link"], videosSearch.result()["result"][2]['channel']['name'], main_result["name"], main_result["artists"][0]["name"], videosSearch.result()["result"][2]['id']]]
 
 def cifra_clubify(song, artist):
     artist = normalize(artist)
@@ -42,4 +41,3 @@ def normalize(str):
     str = str.replace("?", '')
     str = unidecode.unidecode(str)
     return str
-

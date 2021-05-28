@@ -174,6 +174,8 @@ def predictSong(urlsong: str, search: str):
     data_fusion.data_fuse_song(song=test_song, chord_vocabulary=chord_vocabulary)
 
     print('Prediction Finished!')
+
+    return title
     # Study data fusion possibilities
     # data_fusion.data_fuse_song_with_actual_best_midi_and_tab(song=test_song, chord_vocabulary=chord_vocabulary)
 

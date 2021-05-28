@@ -6,11 +6,14 @@ import uuid
 import decibel.spotifytest as sp
 import decibel.framework as fw
 import numpy as np
-from flask import Flask, jsonify, make_response, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request, url_for, send_from_directory
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from flask_bootstrap import Bootstrap
+import json
 
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 app.secret_key = "s3cr3t"
 app.debug = False
 app._static_folder = os.path.abspath("templates/static/")
@@ -30,6 +33,7 @@ def my_form_post():
     datalistglobal.clear()
     #print(sp.search(processed_text))
     resultado = sp.searchHtml(text)
+    print(resultado)
     datalist = [resultado]
     datalistglobal.append(resultado)
     #Desenvolver a exibição de resultados de pesquisa na página results.html
@@ -70,38 +74,35 @@ def contact():
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][0][2]
             if urlsong != '' and urltab != '':
-                fw.predictSong(urlsong, urltab)
+                songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 2':
             song = datalistglobal[0][1][4]
             artist = datalistglobal[0][1][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][1][2]
             if urlsong != '' and urltab != '':
-                fw.predictSong(urlsong, urltab)
+                songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 3':
             song = datalistglobal[0][2][4]
             artist = datalistglobal[0][2][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][2][2]
             if urlsong != '' and urltab != '':
-                fw.predictSong(urlsong, urltab)
-        return render_template('layouts/result.html')
+                songName = fw.predictSong(urlsong, urltab)
 
-@app.route("/plot/<imgdata>")
-def plot(imgdata):
-    data = [float(i) for i in imgdata.strip("[]").split(",")]
-    data = np.reshape(data, (200, 200))
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.axis("off")
-    axis.imshow(data, interpolation="nearest")
-    canvas = FigureCanvas(fig)
-    output = io.BytesIO()
-    canvas.print_png(output)
-    response = make_response(output.getvalue())
-    response.mimetype = "image/png"
-    return response
+        # Returning the result to the client
+        jsonPath = 'Data\Results\Labs\Output' + '/' + str(songName) + ".json"
+        mp3Path = 'Data\Input\Audio' + '/' + str(songName) + ".mp3"
+        file = open(jsonPath, "r")
+        string = file.read()
+        result = json.loads(string)
+        title = "Results"
+        return render_template('layouts/p5page.html', title=title, result=result)
 
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 def create_csv(text):
     unique_id = str(uuid.uuid4())

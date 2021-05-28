@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+  {{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.sound.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src={{url_for('send_static', path='js/sketch.js')}}></script>
+<script src={{url_for('send_static', path='js/circle.js')}}></script>
+<script type="text/javascript">
+  var result = {{ result | tojson | safe }};
+</script>
+{% endblock head %}
+{% block content %}
+<body>
+  <div class="container">
+    <h1 class="text-center"> Try to improve our performance! </h1>
+    <h5 class="text-center">  We need your help to predict better! Show you recognition power and adjust the chords in the music! </h5>
+    <div class="container">
+          <div id="canvasHolder" align="center"></div>
+    </div>
+  </div>
+</body>
+{% endblock content %}

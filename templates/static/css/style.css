@@ -12,6 +12,9 @@ img.results-img{
     margin-top: 100px;
 }
 
+#body{
+    background-color: black;
+}
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
@@ -29,4 +32,7 @@ img.results-img{
 #myDiv {
   display: none;
   text-align: center;
+}
+#canvasHolder{
+    font-family: "Roboto Slab";
 }

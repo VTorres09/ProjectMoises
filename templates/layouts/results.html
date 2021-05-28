@@ -8,11 +8,14 @@
   <h1>Selecione uma opção!</h1>
   <h4>Lembrando que videos não oficiais possuem uma menor precisão.</h4>
 {% for data in datalist %}
+<script type="text/javascript">
+  var id = {{ data | safe}}
+  console.log(id[1][6])
+</script>
   <div>
-    <!--Pode mostrar outros dados-->
-    <a href={{data[0][2]}}> <img src={{data[0][1]}} width="300" height="150" style="margin-left: 2em"> </a>
-    <a href="{{data[1][2]}}"> <img src={{data[1][1]}} width="300" height="150" style="margin-left: 4em"> </a>
-    <a href={{data[2][2]}}> <img src={{data[2][1]}} width="300" height="150" style="margin-left: 6em" > </a>
+    <div id="player1" style="margin-left: 2em"></div>
+    <div id="player2" style="margin-left: 4em"></div>
+    <div id="player3" style="margin-left: 5em"></div>
   </div>
   <div>
     <form method="post" action="/results">
@@ -22,5 +25,42 @@
     </form>
   </div>
 {% endfor %}
+
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player1;
+      var player2;
+      var player3;
+
+      function onYouTubeIframeAPIReady() {
+        player1 = new YT.Player('player1', {
+          height: '150',
+          width: '300',
+          videoId: id[0][6],
+        });
+
+        player2 = new YT.Player('player2', {
+          height: '150',
+          width: '300',
+          videoId: id[1][6],
+        });
+
+        player3 = new YT.Player('player3', {
+          height: '150',
+          width: '300',
+          videoId: id[2][6],
+        });
+      }
+
+
+    </script>
 </div>
 {% endblock %}

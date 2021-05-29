@@ -1,23 +1,25 @@
 .btn{
-    background-color: dodgerblue;
-}
-img.results-img{
-    float: left;
-    height: 100px;
-}
-#inputCanvas{
-    border: 2px solid rgb(102,153,255);
+    background-color: #2aabd2;
 }
 #footer{
-    margin-top: 100px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background: black;
+    color: white;
+    font-family: 'Expressway Rg', sans-serif;
 }
 
-#body{
+body{
     background-color: black;
+}
+
+header{
+    background-color: gray;
+    color: white;
 }
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border-top: 16px solid #2aabd2; /* Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;
@@ -35,4 +37,54 @@ img.results-img{
 }
 #canvasHolder{
     font-family: "Roboto Slab";
+}
+
+#content{
+    background: black;
+    color: white;
+    font-family: 'Reznor', sans-serif;
+}
+
+#searchmusic{
+    font-family: 'Expressway Rg', sans-serif;
+}
+
+#submitbutton{
+    background-color: #2aabd2;
+    color: white;
+}
+
+#select0{
+    background-color: #2aabd2;
+    color: white;
+}
+
+#select1{
+    background-color: #2aabd2;
+    color: white;
+}
+
+#select2{
+    background-color: #2aabd2;
+    color: white;
+}
+
+#music{
+    color: black;
+}
+
+#namesnav{
+    color: white;
+    font-family: 'Reznor', sans-serif;
+    font-size: large;
+    background-color: black;
+    padding-top: 40px;
+}
+#brand-image{
+    width: 130px;
+    height: 130px;
+}
+
+a{
+    color: white;
 }

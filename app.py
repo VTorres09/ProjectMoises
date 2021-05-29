@@ -22,18 +22,17 @@ datalistglobal = []
 #Renderiza página principal
 @app.route("/", methods=["GET"])
 def index():
-    title = "Moises - Chord Detection"
+    title = "Decibel - Chord Detection"
     return render_template("layouts/index.html", title=title)
 
 #Pega o input da pagina principal
 @app.route('/', methods=['POST'])
 def my_form_post():
-    title = "Moises - Chord Detection"
+    title = "Decibel - Chord Detection"
     text = request.form['text']
     datalistglobal.clear()
     #print(sp.search(processed_text))
     resultado = sp.searchHtml(text)
-    print(resultado)
     datalist = [resultado]
     datalistglobal.append(resultado)
     #Desenvolver a exibição de resultados de pesquisa na página results.html
@@ -73,6 +72,7 @@ def contact():
             artist = datalistglobal[0][0][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][0][2]
+            songID = datalistglobal[0][0][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 2':
@@ -80,6 +80,7 @@ def contact():
             artist = datalistglobal[0][1][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][1][2]
+            songID = datalistglobal[0][1][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 3':
@@ -87,6 +88,7 @@ def contact():
             artist = datalistglobal[0][2][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][2][2]
+            songID = datalistglobal[0][2][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
 
@@ -97,7 +99,8 @@ def contact():
         string = file.read()
         result = json.loads(string)
         title = "Results"
-        return render_template('layouts/p5page.html', title=title, result=result)
+        print(songID)
+        return render_template('layouts/p5page.html', title=title, result=result, songid=str(songID))
 
 
 @app.route('/static/<path:path>')

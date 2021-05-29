@@ -4,25 +4,35 @@
     {% block head %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link href="http://fonts.cdnfonts.com/css/chosence" rel="stylesheet">
+    <link href="http://fonts.cdnfonts.com/css/reznor-broken" rel="stylesheet">
+    <link href="http://fonts.cdnfonts.com/css/expressway" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <title>{% block title %}{% endblock %} - Python & Javascript</title>
+    <style>
+      @import url('http://fonts.cdnfonts.com/css/chosence');
+      @import url('http://fonts.cdnfonts.com/css/reznor-broken');
+      @import url('http://fonts.cdnfonts.com/css/expressway');
+    </style>
+    <title>{% block title %}{% endblock %} - Decibel</title>
     {% endblock %}
   </head>
   <body>
     <div class="container">
-        <nav class="navbar navbar-default" role="navigation">
+        <nav class="navbar navbar-dark bg-dark" role="navigation">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
-            </button>    
+            </button>
+              <img id="brand-image" src="{{url_for('static', filename='logo.svg')}}" url="/">
           </div>
-          <a class="navbar-brand" href="#"></a>
+
           <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="namesnav">
               <li><a href="/">Home</a></li>
               <li><a href="/database/">Results</a></li>
+               <li><a href="/database/">About</a></li>
             </ul>
           </div>
         </nav>

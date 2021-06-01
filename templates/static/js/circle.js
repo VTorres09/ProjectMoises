@@ -4,7 +4,8 @@ class Chord {
     this.start = start;
     this.chord = chord;
     this.brightness = 255;
-    this.x = x;
+    this.x = window.wid/2 + x;
+    this.fixed_x = window.wid/2 + x
     this.y = y;
     this.rw = 10; //largura da divisoria
     this.rh = 50; //altura da divisoria
@@ -31,22 +32,21 @@ class Chord {
         //console.log(this.start)
         let offset = (px - this.x)
         this.x = this.x + offset;
+        this.fixed_x = this.fixed_x + offset;
         this.start = this.start + offset/100
     }
   }
 
   move() {
-    if(!pause){
       //console.log("BAR: ", bar_wid)
       //console.log("BAR: ", song_duration)
       //console.log("t0: ", t0)
       //console.log("Curr: ", current_time)
       //console.log("curr: ", currentTime())
-      //let position = map(currentTime(), 0, song_duration, 0, bar_wid);
-      //console.log("mapped: ", position)
-      this.x = this.x - 1;
+      let position = map(current_time, 0, duration, 0, bar_wid);
+      //console.log("TIME: ", current_time)
+      this.x = this.fixed_x - position;
       //console.log(this.x)
-    }
   }
 
   change(){

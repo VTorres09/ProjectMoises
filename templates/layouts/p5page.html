@@ -19,32 +19,20 @@
     <h5 class="text-center">  We need your help to predict better! Show you recognition power and adjust the chords in the music! </h5>
     <div class="container">
           <div id="canvasHolder" align="center"></div>
-          <div id="player"></div>
+            <audio id="playeraud" src="send_audio/{{songname}}"></audio>
+        <p id="demo">{{song}}</p>
+        <p id="demo1"></p>
     </div>
   </div>
  <script>
 
-      // 2. This code loads the IFrame Player API code asynchronously.
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+     var audio = document.getElementById('playeraud');
 
-      var player;
-      function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-          height: '150',
-          width: '300',
-          videoId: '{{ songid }}',
-            events: {
-            'onReady': onPlayerReady,
-          }
-        });
-      }
+     //audio.ontimeupdate = function() {
+         //document.getElementById("demo").innerHTML = audio.currentTime;
+         //tudo q usa currenttime aqui
+     //};
 
-      function onPlayerReady(event) {
-        event.target.playVideo();
-      }
 
     </script>
 

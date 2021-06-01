@@ -17,6 +17,7 @@ bootstrap = Bootstrap(app)
 app.secret_key = "s3cr3t"
 app.debug = False
 app._static_folder = os.path.abspath("templates/static/")
+app.config["CLIENT_SONGS"] = "Data/Input/Audio"
 datalistglobal = []
 
 #Renderiza página principal
@@ -94,18 +95,24 @@ def contact():
 
         # Returning the result to the client
         jsonPath = 'Data\Results\Labs\Output' + '/' + str(songName) + ".json"
-        mp3Path = 'Data\Input\Audio' + '/' + str(songName) + ".mp3"
+        song = str(songName) + ".mp3"
         file = open(jsonPath, "r")
         string = file.read()
         result = json.loads(string)
         title = "Results"
-        print(songID)
-        return render_template('layouts/p5page.html', title=title, result=result, songid=str(songID))
+        return render_template('layouts/p5page.html', title=title, result=result, songname=song)
 
 
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
+
+@app.route('/send_audio/<path:path>')
+def send_audio(path):
+    try:
+        return send_from_directory(app.config["CLIENT_SONGS"], path, as_attachment=True)
+    except FileNotFoundError:
+        print('error 404')
 
 def create_csv(text):
     unique_id = str(uuid.uuid4())

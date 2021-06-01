@@ -7,9 +7,12 @@ let pause = true;
 let amplitude;
 let amp;
 let animations = true;
-let timer, current_time = 0;
+let current_time = 0;
+let last_current_time = 0;
+let duration;
 //let t0, t1, t2, playTime = 0;
 let song_duration, bar_wid;
+
 
 function preload(){
   //soundFormats('mp3');
@@ -27,17 +30,17 @@ function setup() {
   timer = setInterval(clock, 500)
   createCanvas(window.wid, window.hei).parent('canvasHolder');
   amplitude = new p5.Amplitude();
-  amplitude.setInput(song_mp3)
+  //amplitude.setInput(audio)
   parseChords(chords);
   bar_wid = chords[chords.length-1].x
 }
 
 function clock(){
-    if(!pause){
-    fill(255)
-    current_time = current_time + 1
+    //if(!pause){
+    //fill(255)
+    //current_time = current_time + 1
     //onsole.log(current_time/2)
-    }
+    //}
 }
 
 function parseChords(chords){
@@ -46,7 +49,7 @@ function parseChords(chords){
     var start = song_json[i]["current_beat_time"];
     var chord = song_json[i]["estimated_chord"];
     var x = findNextX(i, start);
-    var y = window.hei/2;
+    var y = window.hei/3;
     var a = new Chord(beat, start, chord, x, y);
     chords.push(a);
   }
@@ -61,31 +64,62 @@ function findNextX(i, start){
 }
 
 function draw() {
-  fill(255)
-  text(current_time, 0, 0)
-  if(animations){
-    amp = 25 * amplitude.getLevel();
-    text("Desativar animação", 0, 0)
-  }else{
-    amp = 0;
-    text("Ativar animação", 0, 0)
+  last_current_time = current_time
+  audio.ontimeupdate = function() {
+    document.getElementById("demo").innerHTML = audio.currentTime;
+    current_time = audio.currentTime
+    duration = audio.duration
+    document.getElementById("demo1").innerHTML = current_time;
   }
-  background(0, amp, amp);
-  playButton(amp);
+  if(!pause && current_time == last_current_time){
+    current_time += 0.015
+  }
+    fill(255)
+    text(current_time, 0, 0)
+    rect(window.wid / 2 - 40, window.hei / 3, 40, 80)
+    if (animations) {
+      amp = 25 * amplitude.getLevel();
+      text("Desativar animação", 0, 0)
+    } else {
+      amp = 0;
+      text("Ativar animação", 0, 0)
+    }
+    background(0, amp, amp);
+    //pause = player.getPlayerState()
+    //console.log(player.getPlayerState())
+    /*if (typeof player.getCurrentTime === "function") {
+        console.log("timestamp: ",player.getCurrentTime())
+        current_time = player.getCurrentTime()
+    }
+    if (typeof player.getPlayerState === "function") {
+      console.log("State: ",player.getPlayerState())
+      pause = player.getPlayerState()
+    }
+    if (typeof player.getDuration === "function") {
+      duration = player.getDuration()
+      console.log("DURATION: ",duration)
+    }*/
+    //console.log(player.getDuration())
+    playButton(amp);
     //if(song_mp3.isLoaded()){
-      //console.log("?????????", current_time)
-      //console.log("funciona pf ",pause_time)
-      //let aux = currentTime(current_time);
-      //if(aux != null){
-        //current_time = aux
-      //}
-      drawRects();
+    //console.log("?????????", current_time)
+    //console.log("funciona pf ",pause_time)
+    //let aux = currentTime(current_time);
+    //if(aux != null){
+    //current_time = aux
+    //}
+    drawRects();
     for (var i in chords) {
-      chords[i].move();
+      if (!pause) {
+        chords[i].move();
+      }
       chords[i].show();
       chords[i].change();
     }
+    //current_time += 0.12
+    //}
   //}
+  //chords[i].move();
 }
 
 
@@ -103,9 +137,14 @@ function drawRects(){
 
 function playButton(amp){
     let radius = window.hei/13
+    let xc = window.wid/2
+    let yc = window.hei/1.2
+    fill(0, 255, 255)
+    triangle(xc, window.hei/4, xc-radius, window.hei/5, xc+radius, window.hei/5)
+    rect()
     if(pause){
-      fill(50, 50, 50)
       txt = "Play"
+      fill(50, 50, 50)
     }else{
       fill(0, 255, 255, 8)
       circle(window.wid/2, window.hei/1.2, radius+(amp*3.2))
@@ -118,11 +157,19 @@ function playButton(amp){
       fill(0, 255, 255)
       txt = "Pause"
     }
-      circle(window.wid/2, window.hei/1.2, radius)
+      circle(xc, yc, radius)
       textAlign(CENTER)
       textSize(window.hei/20)
       fill(0, 255, 255)
       text(txt, window.wid/2, window.hei/1.05)
+    if(pause){
+      fill(0, 255, 255)
+      triangle(xc+(radius*0.7), yc, xc-(0.5*radius), yc-(0.5*radius), xc-(0.5*radius), yc+(0.5*radius))
+    }else{
+      fill(50, 50, 50)
+      rect(xc-(0.5*radius), yc-(0.5*radius), radius*0.3, radius)
+      rect(xc+(0.5*radius)-(radius*0.35), yc-(0.5*radius), radius*0.3, radius)
+    }
 }
 
 function mousePressed() {
@@ -137,12 +184,16 @@ function mousePressed() {
       //}
       //t1 = millis()
       //song_mp3.play(0, 1, 1)//, playTime/1000)
+      // player.playVideo()
+      audio.play();
       pause=false;
     }else{
       //t2 = millis()
       //playTime = playTime+(t2-t1)
       //t1 = t2
       //song_mp3.stop()
+      //player.pauseVideo()
+      audio.pause();
       pause=true
     }
   }

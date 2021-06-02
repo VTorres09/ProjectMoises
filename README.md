@@ -1,6 +1,6 @@
 # Chord Detection Algorithm
 A chord detection system that aims to detect the chord sequence in a song and its respective playing times, this project was created for the Moises
-Chord Detection Challenge, based on Decibel’s Algorithm, using Spotify Web API, Cifraclub website and youtube features.
+Chord Detection Challenge, based on Decibel’s Algorithm, using Spotify Web API, Cifraclub website, Youtube features and focus on crowdsourcing.
 
 https://www.cifraclub.com.br/
 

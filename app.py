@@ -3,9 +3,12 @@ import io
 import os
 import uuid
 
+from unidecode import unidecode
+
 import decibel.spotifytest as sp
 import decibel.framework as fw
 import numpy as np
+from pathlib import Path
 from flask import Flask, jsonify, make_response, render_template, request, url_for, send_from_directory
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -18,8 +21,9 @@ app.secret_key = "s3cr3t"
 app.debug = False
 app._static_folder = os.path.abspath("templates/static/")
 app.config["CLIENT_SONGS"] = "Data/Input/Audio"
+app.config["CLIENT_PREDCTIONS"] = "Data/Results/Labs/Client_Predictions/"
 datalistglobal = []
-
+actualSong = []
 #Renderiza página principal
 @app.route("/", methods=["GET"])
 def index():
@@ -32,7 +36,6 @@ def my_form_post():
     title = "Decibel - Chord Detection"
     text = request.form['text']
     datalistglobal.clear()
-    #print(sp.search(processed_text))
     resultado = sp.searchHtml(text)
     datalist = [resultado]
     datalistglobal.append(resultado)
@@ -62,9 +65,45 @@ def result_for_uuid(unique_id):
 @app.route("/postmethod", methods=["POST"])
 def post_javascript_data():
     jsdata = request.form["canvas_data"]
-    unique_id = create_csv(jsdata)
-    params = {"unique_id": unique_id}
-    return jsonify(params)
+    client_prediction = json.loads(jsdata)
+    print(client_prediction)
+    final_prediction = []
+    title = "Result"
+    folder_path = Path(app.config["CLIENT_PREDCTIONS"] + actualSong[0])
+    index_path = Path(app.config["CLIENT_PREDCTIONS"] + actualSong[0] + "/index.txt")
+    os.makedirs(folder_path, exist_ok=True)
+    folder_path.touch(exist_ok=True)
+    index_path.touch(exist_ok=True)
+    file = open(str(folder_path) + "/index.txt", 'r')
+    index_prov = file.read()
+    file.close()
+    file = open(str(folder_path) + "/index.txt", 'w')
+    if index_prov == '':
+        file.write("1")
+        index_final = '1'
+    else:
+        index_int = int(index_prov)
+        index_int += 1
+        index_final = str(index_int)
+        file.write(index_final)
+    file.close()
+
+
+    with open(str(folder_path) + "/" + index_final + ".json", 'w') as write_file:
+        for object in client_prediction:
+            dictionary = {}
+            dictionary['current_beat'] = object['beat']
+            dictionary['current_beat_time'] = object['start']
+            dictionary['estimated_chord'] = object['chord']
+            final_prediction.append(dictionary)
+        json.dump(final_prediction, write_file, indent=4)
+
+    return render_template("layouts/result.html", title=title)
+
+@app.route("/result/", methods=["GET"])
+def result():
+    title = "Submitted"
+    return render_template("layouts/result.html", title=title)
 
 @app.route("/results", methods=["POST"])
 def contact():
@@ -73,7 +112,6 @@ def contact():
             artist = datalistglobal[0][0][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][0][2]
-            songID = datalistglobal[0][0][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 2':
@@ -81,7 +119,6 @@ def contact():
             artist = datalistglobal[0][1][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][1][2]
-            songID = datalistglobal[0][1][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
         elif request.form['submit_button'] == 'Select Option 3':
@@ -89,12 +126,14 @@ def contact():
             artist = datalistglobal[0][2][5]
             urltab = sp.cifra_clubify(song, artist)
             urlsong = datalistglobal[0][2][2]
-            songID = datalistglobal[0][2][6]
             if urlsong != '' and urltab != '':
                 songName = fw.predictSong(urlsong, urltab)
 
+        actualSong.clear()
+        actualSong.append(songName)
         # Returning the result to the client
         jsonPath = 'Data\Results\Labs\Output' + '/' + str(songName) + ".json"
+
         song = str(songName) + ".mp3"
         file = open(jsonPath, "r")
         string = file.read()
@@ -112,7 +151,7 @@ def send_audio(path):
     try:
         return send_from_directory(app.config["CLIENT_SONGS"], path, as_attachment=True)
     except FileNotFoundError:
-        print('error 404')
+        print('Error 404')
 
 def create_csv(text):
     unique_id = str(uuid.uuid4())

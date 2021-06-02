@@ -68,6 +68,6 @@ class Chord {
     fill(0, 255, 255, 150);
     rect(this.x-5, this.y-36, this.rw+(amp/2), this.rh)
     textSize(window.hei/20);
-    text(parseFloat(this.start).toFixed(2), (this.x-window.wid/50), this.y+(this.y/6));
+    text(parseFloat(this.start).toFixed(2), (this.x-window.wid/50), this.y+(this.y/5));
   }
 }

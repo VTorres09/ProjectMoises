@@ -21,12 +21,11 @@ function preload(){
   //fontRoboto = loadFont('assets/Roboto-Black.ttf');
 }
 
-let chords = [];
+var chords = [];
 
 function setup() {
-  window.wid = 1000; //Tirar /2 na versao final
-  window.hei = 600;//Tirar /2 na versao final
-  //song_duration = song_mp3.duration();
+  window.wid = 1000;
+  window.hei = 600;
   timer = setInterval(clock, 500)
   createCanvas(window.wid, window.hei).parent('canvasHolder');
   amplitude = new p5.Amplitude();
@@ -85,29 +84,7 @@ function draw() {
       text("Ativar animação", 0, 0)
     }
     background(0, amp, amp);
-    //pause = player.getPlayerState()
-    //console.log(player.getPlayerState())
-    /*if (typeof player.getCurrentTime === "function") {
-        console.log("timestamp: ",player.getCurrentTime())
-        current_time = player.getCurrentTime()
-    }
-    if (typeof player.getPlayerState === "function") {
-      console.log("State: ",player.getPlayerState())
-      pause = player.getPlayerState()
-    }
-    if (typeof player.getDuration === "function") {
-      duration = player.getDuration()
-      console.log("DURATION: ",duration)
-    }*/
-    //console.log(player.getDuration())
     playButton(amp);
-    //if(song_mp3.isLoaded()){
-    //console.log("?????????", current_time)
-    //console.log("funciona pf ",pause_time)
-    //let aux = currentTime(current_time);
-    //if(aux != null){
-    //current_time = aux
-    //}
     drawRects();
     for (var i in chords) {
       if (!pause) {
@@ -138,37 +115,46 @@ function drawRects(){
 function playButton(amp){
     let radius = window.hei/13
     let xc = window.wid/2
-    let yc = window.hei/1.2
+    let yc = window.hei/1.6
     fill(0, 255, 255)
     triangle(xc, window.hei/4, xc-radius, window.hei/5, xc+radius, window.hei/5)
-    rect()
     if(pause){
       txt = "Play"
       fill(50, 50, 50)
     }else{
-      fill(0, 255, 255, 8)
-      circle(window.wid/2, window.hei/1.2, radius+(amp*3.2))
-      fill(0, 255, 255, 12)
-      circle(window.wid/2, window.hei/1.2, radius+(amp*2.5))
-      fill(0, 255, 255, 25)
-      circle(window.wid/2, window.hei/1.2, radius+(amp*2))
-      fill(0, 255, 255, 50)
-      circle(window.wid/2, window.hei/1.2, radius+(amp*1.5))
+      circle(window.wid/2, window.hei/1.6, radius)
       fill(0, 255, 255)
+      circle((window.wid/2)*1.2, window.hei/1.6, radius*0.7)
+      circle((window.wid/2)*0.8, window.hei/1.6, radius*0.7)
       txt = "Pause"
     }
+      circle((window.wid/2)*1.2, window.hei/1.6, radius*0.7)
+      circle((window.wid/2)*0.8, window.hei/1.6, radius*0.7)
+      rect((window.wid/2)*1.8, yc-(0.5*radius), radius*2, radius, 200)
       circle(xc, yc, radius)
       textAlign(CENTER)
       textSize(window.hei/20)
       fill(0, 255, 255)
-      text(txt, window.wid/2, window.hei/1.05)
+      text(txt, window.wid/2, window.hei/1.32)
+
+
     if(pause){
       fill(0, 255, 255)
       triangle(xc+(radius*0.7), yc, xc-(0.5*radius), yc-(0.5*radius), xc-(0.5*radius), yc+(0.5*radius))
+      textSize(window.hei/20)
+      text('>>', (window.wid/2)*1.2, window.hei/1.56)
+      text('<<', (window.wid/2)*0.8, window.hei/1.56)
+      textSize(window.hei/25)
+      text('Send', (window.wid/2)*1.89, (yc-(0.1*radius))*1.04)
     }else{
       fill(50, 50, 50)
       rect(xc-(0.5*radius), yc-(0.5*radius), radius*0.3, radius)
       rect(xc+(0.5*radius)-(radius*0.35), yc-(0.5*radius), radius*0.3, radius)
+      textSize(window.hei/20)
+      text('>>', (window.wid/2)*1.2, window.hei/1.56)
+      text('<<', (window.wid/2)*0.8, window.hei/1.56)
+      textSize(window.hei/25)
+      text('Send', (window.wid/2)*1.89, (yc-(0.1*radius))*1.04)
     }
 }
 
@@ -176,34 +162,36 @@ function mousePressed() {
   for (var i in chords) {
     chords[i].clicked(mouseX, mouseY);
   }
-  let d = dist(mouseX, mouseY, window.wid/2, window.hei/1.2)
+  let d = dist(mouseX, mouseY, window.wid/2, window.hei/1.6)
   if(d < window.hei/20){
     if(pause){
-      //if(firstPlayClick){
-        //t0 = millis()
-      //}
-      //t1 = millis()
-      //song_mp3.play(0, 1, 1)//, playTime/1000)
-      // player.playVideo()
       audio.play();
       pause=false;
     }else{
-      //t2 = millis()
-      //playTime = playTime+(t2-t1)
-      //t1 = t2
-      //song_mp3.stop()
-      //player.pauseVideo()
       audio.pause();
       pause=true
     }
   }
-  let d2 = dist(mouseX, mouseY, 0, 0)
-  if(d2 < 50){
-    if(animations){
-      animations = false;
-    }else{
-      animations = true;
-    }
+  let d2 = dist(mouseX, mouseY, (window.wid/2)*1.2, window.hei/1.6)
+  if(d2 < (window.hei/13)*0.7){
+      audio.currentTime += 5.0;
+
+  }
+
+  let d3 = dist(mouseX, mouseY, (window.wid/2)*0.8, window.hei/1.6)
+  if(d3 < (window.hei/13)*0.7){
+       audio.currentTime -= 5.0;
+  }
+
+  let d4 = dist(mouseX, mouseY, (window.wid/2)*1.95, window.hei/1.6)
+  if(d4 < (window.hei/11)){
+      //enviar array chords para o server e resolver problema da pausa
+    $.post( "/postmethod", {
+      canvas_data: JSON.stringify(chords)
+    }, function(err, req, resp){
+      //Redireciona para a pagina do resultado
+      window.location.href = "/result/";
+    });
   }
 }
 

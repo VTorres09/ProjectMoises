@@ -37,7 +37,7 @@ def classify_line_type(line: str) -> LineType:
         return LineType.Chords
     if re.match(r'.*tuning.*', line.lower()):
         return LineType.TuningDefinition
-    if re.match(r'.*capo.*', line.lower()):
+    if re.match(r'.*capotraste.*', line.lower()):
         return LineType.CapoChange
     if _is_structural_marker(line):
         return LineType.StructuralMarker
@@ -75,12 +75,12 @@ def _is_structural_marker(line: str) -> bool:
     """
     line_lower_without_symbols = re.sub(r'[ :\[\];<>0-9]', '', line).lower()
     if line_lower_without_symbols in ['verse', 'chorus', 'intro', 'bridge', 'solo', 'instrumental', 'fine', 'coda',
-                                      'outro', 'break', 'interlude']:
+                                      'outro', 'break', 'interlude', 'refrão', 'primeira parte', 'pré-refrão']:
         return True
     if _contains_any_of(line.lower(), ['[verse]', '[chorus]', '[intro]', '[bridge]', '[solo]', '[instrumental]',
-                                       '[fine]', '[coda]', '[outro]', '[break]', '[interlude]']):
+                                       '[fine]', '[coda]', '[outro]', '[break]', '[interlude]', '[refrão]', '[primeira parte]', '[pré-refrão]']):
         return True
-    if len(re.findall(r'\[(verse|chorus|intro|bridge|solo|instrumental|fine|coda|outro|break|interlude).{,15}\]',
+    if len(re.findall(r'\[(verse|chorus|intro|bridge|solo|instrumental|fine|coda|outro|break|interlude|refrão|primeira parte|pré-refrão).{,15}\]',
                       line.lower())) > 0:
         return True
     return False

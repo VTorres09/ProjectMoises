@@ -5,6 +5,9 @@ from the Internet.
 
 from selenium import webdriver
 from os import path
+
+from unidecode import unidecode
+
 from decibel.import_export.filehandler import _full_path_to
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait

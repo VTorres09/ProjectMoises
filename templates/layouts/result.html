@@ -5,19 +5,19 @@
 {% endblock %}
 {% block content %}
 <body onload="myFunction()" style="margin:0;">
-    <div id = "loader" class="loader" style="margin-left: 38em"></div>
-    <div id = "loaderSub" ><h1 align="center">Predicting your song!</h1></div>
+    <div id = "loader" class="loader" style="margin-left: 36em"></div>
+    <div id = "loaderSub" ><h1 align="center">Sending your prediction!</h1></div>
 
     <div style="display:none;" id="myDiv" class="animate-bottom">
-      <h2>Tcharamm!</h2>
-      <p>See your results here...</p>
+      <h2>Thank you!</h2>
+      <p>Your prediction have been submitted to our database!</p>
     </div>
 
   <script>
       var myVar;
 
   function myFunction() {
-    myVar = setTimeout(showPage, 5000);
+    myVar = setTimeout(showPage, 3000);
   }
 
   function showPage() {

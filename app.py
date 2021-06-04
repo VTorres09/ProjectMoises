@@ -3,34 +3,30 @@ import io
 import os
 import uuid
 
-from unidecode import unidecode
-
 import decibel.spotifytest as sp
 import decibel.framework as fw
-import numpy as np
 from pathlib import Path
 from flask import Flask, jsonify, make_response, render_template, request, url_for, send_from_directory
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 from flask_bootstrap import Bootstrap
 import json
+
+from decibel.import_export.filehandler import CLIENT_PREDICTIONS_FOLDER, OUTPUT_FOLDER, AUDIO_FOLDER, ROOT_PATH, \
+    TABS_FOLDER
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 app.secret_key = "s3cr3t"
 app.debug = False
-app._static_folder = os.path.abspath("templates/static/")
-app.config["CLIENT_SONGS"] = "Data/Input/Audio"
-app.config["CLIENT_PREDCTIONS"] = "Data/Results/Labs/Client_Predictions/"
+app._static_folder = ROOT_PATH + '/templates/static'
 datalistglobal = []
 actualSong = []
-#Renderiza página principal
+
 @app.route("/", methods=["GET"])
 def index():
     title = "Decibel - Chord Detection"
     return render_template("layouts/index.html", title=title)
 
-#Pega o input da pagina principal
+# Pega o input da pagina principal
 @app.route('/', methods=['POST'])
 def my_form_post():
     title = "Decibel - Chord Detection"
@@ -39,13 +35,9 @@ def my_form_post():
     resultado = sp.searchHtml(text)
     datalist = [resultado]
     datalistglobal.append(resultado)
-    #Desenvolver a exibição de resultados de pesquisa na página results.html
-    """
-    for csv in glob.iglob("images/*.csv"):
-        datalist.append(get_file_content(csv))
-    """
     return render_template("layouts/results.html", title=title, datalist=datalist)
 
+# Mostra os arquivos na base de dados
 @app.route("/database/", methods=["GET"])
 def database():
     title = "Results"
@@ -61,7 +53,7 @@ def result_for_uuid(unique_id):
     data = get_file_content(get_file_name(unique_id))
     return render_template("layouts/result.html", title=title, data=data)
 
-
+# Retorna o resultado do cliente
 @app.route("/postmethod", methods=["POST"])
 def post_javascript_data():
     jsdata = request.form["canvas_data"]
@@ -69,8 +61,8 @@ def post_javascript_data():
     print(client_prediction)
     final_prediction = []
     title = "Result"
-    folder_path = Path(app.config["CLIENT_PREDCTIONS"] + actualSong[0])
-    index_path = Path(app.config["CLIENT_PREDCTIONS"] + actualSong[0] + "/index.txt")
+    folder_path = Path(CLIENT_PREDICTIONS_FOLDER + "/" + actualSong[0])
+    index_path = Path(CLIENT_PREDICTIONS_FOLDER + "/" + actualSong[0] + "/index.txt")
     os.makedirs(folder_path, exist_ok=True)
     folder_path.touch(exist_ok=True)
     index_path.touch(exist_ok=True)
@@ -105,6 +97,7 @@ def result():
     title = "Submitted"
     return render_template("layouts/result.html", title=title)
 
+# Rota que faz a predição da música caso ela não exista no banco de dados
 @app.route("/results", methods=["POST"])
 def contact():
         if request.form['submit_button'] == 'Select Option 1':
@@ -132,8 +125,7 @@ def contact():
         actualSong.clear()
         actualSong.append(songName)
         # Returning the result to the client
-        jsonPath = 'Data\Results\Labs\Output' + '/' + str(songName) + ".json"
-
+        jsonPath = OUTPUT_FOLDER + '/' + str(songName) + ".json"
         song = str(songName) + ".mp3"
         file = open(jsonPath, "r")
         string = file.read()
@@ -149,15 +141,10 @@ def send_static(path):
 @app.route('/send_audio/<path:path>')
 def send_audio(path):
     try:
-        return send_from_directory(app.config["CLIENT_SONGS"], path, as_attachment=True)
+        return send_from_directory(AUDIO_FOLDER, path, as_attachment=True)
     except FileNotFoundError:
         print('Error 404')
 
-def create_csv(text):
-    unique_id = str(uuid.uuid4())
-    with open(get_file_name(unique_id), "a") as file:
-        file.write(text[1:-1] + "\n")
-    return unique_id
 
 
 def get_file_name(unique_id):

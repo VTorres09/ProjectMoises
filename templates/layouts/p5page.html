@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.sound.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src={{url_for('send_static', path='js/sketch.js')}}></script>
-<script src={{url_for('send_static', path='js/circle.js')}}></script>
+<script src={{url_for('send_static', path='js/chords.js')}}></script>
 <script type="text/javascript">
   var result = {{ result | tojson | safe }};
 </script>
@@ -27,12 +27,6 @@
  <script>
 
      var audio = document.getElementById('playeraud');
-
-     //audio.ontimeupdate = function() {
-         //document.getElementById("demo").innerHTML = audio.currentTime;
-         //tudo q usa currenttime aqui
-     //};
-
 
     </script>
 

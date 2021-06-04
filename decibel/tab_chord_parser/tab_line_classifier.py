@@ -78,7 +78,8 @@ def _is_structural_marker(line: str) -> bool:
                                       'outro', 'break', 'interlude', 'refrão', 'primeira parte', 'pré-refrão']:
         return True
     if _contains_any_of(line.lower(), ['[verse]', '[chorus]', '[intro]', '[bridge]', '[solo]', '[instrumental]',
-                                       '[fine]', '[coda]', '[outro]', '[break]', '[interlude]', '[refrão]', '[primeira parte]', '[pré-refrão]']):
+                                       '[fine]', '[coda]', '[outro]', '[break]', '[interlude]', '[refrão]',
+                                       '[primeira parte]', '[pré-refrão]']):
         return True
     if len(re.findall(r'\[(verse|chorus|intro|bridge|solo|instrumental|fine|coda|outro|break|interlude|refrão|primeira parte|pré-refrão).{,15}\]',
                       line.lower())) > 0:

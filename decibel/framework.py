@@ -8,6 +8,7 @@ from tkinter import filedialog
 
 import pafy
 from sklearn.model_selection import KFold
+from unidecode import unidecode
 
 import decibel.spotifytest as sp
 from decibel.audio_midi_aligner import aligner
@@ -24,6 +25,8 @@ from decibel.midi_chord_recognizer.midi_beat_segmenter import MIDIBeatSegmenter
 from decibel.music_objects.chord_vocabulary import ChordVocabulary
 from decibel.music_objects.song import Song
 from decibel.tab_chord_parser import tab_parser
+from decibel.import_export.filehandler import CLIENT_PREDICTIONS_FOLDER, OUTPUT_FOLDER, AUDIO_FOLDER, ROOT_PATH, \
+    TABS_FOLDER
 
 NR_CPU = max(mp.cpu_count() - 1, 1)
 
@@ -149,21 +152,21 @@ def predictSong(urlsong: str, search: str):
     video = pafy.new(URLSONG)
 
     # We can change for spotify ID
-    title = video.title.replace(" ", "_")
+    title = unidecode(video.title.replace(" ", "_"))
     bestaudio = video.getbestaudio()
-    MP3FILE = 'D:\Moises\DECIBEL\Data\Input\Audio' + "/" + str(title) + ".mp3"
+    MP3FILE = AUDIO_FOLDER + "/" + str(title) + ".mp3"
     bestaudio.download(MP3FILE)
     print("You have successfully downloaded the mp3 file")
 
     # Download tab music file
-    download_tab(URLTAB, "D:\Moises\DECIBEL\Data\Input\Tabs", title + ".txt")
+    download_tab(URLTAB, TABS_FOLDER, str(title) + ".txt")
 
 
     # If you want to change the audio path, you have to change "MP3FILE"
     test_song = Song(title, 'test', 'test', '', MP3FILE, '')
 
     # If you want to change the audio path, you have to change "filehandler.TABS_FOLDER"
-    test_song.add_tab_path(path.join(filehandler.TABS_FOLDER, title + ".txt"))
+    test_song.add_tab_path(path.join(TABS_FOLDER, title + ".txt"))
 
     # test_song.add_tab_path(path.join(filehandler.TABS_FOLDER, 'test_Chords2.txt'))
     tab_parser.classify_all_tabs_of_song(song=test_song)

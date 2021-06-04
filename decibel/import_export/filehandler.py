@@ -118,7 +118,7 @@ DUPLICATE_MIDI_PATH = _full_path_to('DuplicateMIDIs.txt', 'f')
 MIDILABS_FOLDERS = {'bar': _full_path_to('MIDIlabsBar', 'rl'), 'beat': _full_path_to('MIDIlabsBeat', 'rl')}
 TABLABS_FOLDER = _full_path_to('TabLabs', 'rl')
 OUTPUT_FOLDER = _full_path_to('Output', 'rl')
-
+CLIENT_PREDICTIONS_FOLDER = _full_path_to('Client_Predictions', 'rl')
 DATA_FUSION_FOLDERS = dict()
 for df_type in ['rnd', 'mv', 'df']:
     for selection_method in ['all', 'best']:

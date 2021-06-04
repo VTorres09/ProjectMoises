@@ -8,7 +8,7 @@
     color: white;
     font-family: 'Expressway Rg', sans-serif;
 }
-
+c_input{ font-size:1.3em; padding:.5em; color: black }
 body{
     background-color: black;
 }
@@ -50,6 +50,11 @@ header{
 }
 
 #submitbutton{
+    background-color: #2aabd2;
+    color: white;
+}
+
+#c_button{
     background-color: #2aabd2;
     color: white;
 }

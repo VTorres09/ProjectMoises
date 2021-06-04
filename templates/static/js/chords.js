@@ -1,5 +1,5 @@
 class Chord {
-  constructor(beat, start, chord, x, y) {
+  constructor(beat, start, chord, x, y, i) {
     this.beat = beat;
     this.start = start;
     this.chord = chord;
@@ -11,6 +11,8 @@ class Chord {
     this.rh = 50; //altura da divisoria
     this.selected = false;
     this.changing = false;
+    this.replace = false;
+    this.index = i;
   }
 
   clicked(px, py) {
@@ -22,6 +24,13 @@ class Chord {
       //locked = false;
       this.selected = false;
     }
+    let s = this.x+(window.wid/50)+(amp/2)
+    if(px >= s&&px < s+100 && py >= this.y-this.rh&&py < this.y){
+      this.replace = true;
+    }else{
+      this.replace = false;
+    }
+
   }
 
   moving(px, limit_left = 0, limit_right){
@@ -56,8 +65,6 @@ class Chord {
     }
   }
 
-
-
   show() {
     textAlign(LEFT)
     fill(this.brightness, 125);
@@ -69,5 +76,9 @@ class Chord {
     rect(this.x-5, this.y-36, this.rw+(amp/2), this.rh)
     textSize(window.hei/20);
     text(parseFloat(this.start).toFixed(2), (this.x-window.wid/50), this.y+(this.y/5));
+    if(this.x <= window.wid/2+10 && this.x >= window.wid/2-10){
+      chord_now[0] = this.index
+      chord_now[1] = this.chord
+    }
   }
 }

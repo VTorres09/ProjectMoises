@@ -1,20 +1,19 @@
 class Chord {
 
   //construtor da classe
-  constructor(beat, start, chord, x, y, i) {
+  constructor(beat, start, chord, x, fixed) {
     this.beat = beat;
     this.start = start;
     this.chord = chord;
     this.brightness = 255;
     this.x = window.wid/2 + x;
-    this.fixed_x = window.wid/2 + x
-    this.y = y;
+    this.fixed_x = window.wid/2 + x;
+    this.y = window.hei / 3;
     this.rw = 10; //largura da divisoria
     this.rh = 50; //altura da divisoria
     this.selected = false;
     this.changing = false;
     this.replace = false;
-    this.index = i;
   }
 
   //Função chamada quando o usuario clica na tela
@@ -34,12 +33,14 @@ class Chord {
   }
 
   //Função para acompanhar o mouse quando o usuário alterar o tempo do acorde
-  moving(px, limit_left = 0, limit_right){
-    if(this.selected && px>limit_left && px<limit_right){
-        let offset = (px - this.x)
+  moving(px, duration){
+    if(this.selected){
+      let offset = (px - this.x)
+      if((this.start + offset/100) >= 0 && (this.start + offset/100) <= duration){
         this.x = this.x + offset;
         this.fixed_x = this.fixed_x + offset;
         this.start = this.start + offset/100
+      }
     }
   }
 
@@ -57,6 +58,11 @@ class Chord {
     }
   }
 
+  //Ajusta o fixed_x para acordes adicionados
+  fix(last_chord, offset){
+    this.fixed_x = last_chord.fixed_x + offset
+  }
+
   //Função criada para renderizar os acordes
   show() {
     textAlign(LEFT)
@@ -69,7 +75,7 @@ class Chord {
     textSize(window.hei/20);
     text(parseFloat(this.start).toFixed(2), (this.x-window.wid/50), this.y+(this.y/5));
     if(this.x <= window.wid/2+10 && this.x >= window.wid/2-10){
-      chord_now[0] = this.index
+      chord_now[0] = this.beat - 1
       chord_now[1] = this.chord
     }
   }

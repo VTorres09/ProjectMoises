@@ -42,11 +42,16 @@ function setup() {
 
     //Criamos a area de input para a substituição de acordes
     c_input = createInput()
-    c_input.position(((window.wid / 2) + (c_input.width / 1.2)), (window.hei / 2) + (c_input.height) * 1.2)
+    c_input.position((window.wid / 2)*1.2, (window.hei / 2) + (c_input.height) * 1.2)
     c_button = createButton('✎ update');
-    c_button.position(c_input.x + c_input.width, (window.hei / 2) + (c_input.height) * 1.2);
+    c_button.position((window.wid/2)*1.42, (window.hei / 2) + (c_input.height) * 1.2);
     c_button.mousePressed(update_chord);
-    c_input.color = (0, 255, 255)
+    add_button = createButton('✚ add');
+    add_button.position((window.wid/2)*1.575, (window.hei / 2) + (add_button.height) * 1.2);
+    add_button.mousePressed(add_chord);
+    delete_button = createButton('✖ delete');
+    delete_button.position((window.wid/2)*1.688, (window.hei / 2) + (add_button.height) * 1.2);
+    delete_button.mousePressed(del_chord);
     //Vale lembrar que essa area de input ainda não é criada pelo p5, e por isso não é dinâmica como os outros elementos da página
 }
 
@@ -63,10 +68,9 @@ function parseChords(chords) {
 
         //findNextX irá definir a posição no eixo X de cada acorde
         var x = findNextX(i, start);
-        var y = window.hei / 3;
 
         //Criamos um objeto do tipo Chord, descrito em "chord.js", e inserimos no array
-        var a = new Chord(beat, start, chord, x, y, i);
+        var a = new Chord(beat, start, chord, x, i);
         chords.push(a);
     }
 }
@@ -133,8 +137,85 @@ function draw() {
 
 //Nessa função obtemos o input do usuario para alterar o acorde
 function update_chord() {
-    chord_now[1] = c_input.value()
-    chords[chord_now[0]].chord = c_input.value()
+    if(isChord(c_input.value())){
+        chord_now[1] = c_input.value()
+        chords[chord_now[0]].chord = c_input.value()
+    }else{
+        invalidChord()
+    }
+}
+
+//Nessa função obtemos o input do usuario para adicionar um acorde
+function add_chord(){
+    if(isChord(c_input.value())) {
+        let index = chord_now[0]
+        insert(c_input.value(), index)
+        for (var i in chords) {
+            chords[i].show()
+        }
+        console.log(chords)
+    }else{
+        invalidChord()
+    }
+}
+
+//Executa a inserção do acorde na lista final ajustando a ordem dos beats
+function insert(chord, index){
+  let offset = (window.wid/2) - chords[index].x
+  var c = new Chord( index+1, current_time, chord, 0)
+  chords.splice(index+1, 0, c)
+  chords[index+1].fix(chords[index], offset)
+  for(let i = index+1; i<chords.length; i++){
+    chords[i].beat += 1
+  }
+}
+
+//Nessa função obtemos o input do usuario para deletar um acorde
+function del_chord(){
+    let index = chord_now[0]
+    chords.splice(index, 1)
+    for (let i = index; i < chords.length; i++) {
+        chords[i].beat -= 1
+    }
+    for (var i in chords) {
+        chords[i].show()
+    }
+    drawRects()
+    console.log(chords)
+}
+
+//Alertar quando o acorde for invalido
+function invalidChord(){
+    alert("INVALID CHORD")
+}
+
+//Checa se o input do usuario é um acorde
+function isChord(word){
+    word = word.toLowerCase()
+    if(word.length >= 12){
+        return false;
+    }
+    let s = 'abcdefgn'
+    if(!(s.includes(word[0]))){
+        return false;
+    }
+    if(word.length == 1){
+        return true
+    }
+    let s1 = ':mMb#123456789/'
+    if(!(s1.includes(word[1]))){
+        return false;
+    }
+    if(containsAnyOf(word,"'!$%&*,.';<=>@[\]^{|}~'")){
+        return false;
+    }
+    return true
+}
+//Checa se uma string contem qualquer um dos caracteres
+function containsAnyOf(str, chars){
+    for(i in chars){
+        if(str.includes(chars[i])){return true}
+    }
 }
 
 //drawRects renderiza os retangulos que os acordes estão inseridos, dinamicamente baseado na posição dos mesmos
@@ -256,11 +337,20 @@ function mousePressed() {
 function mouseDragged() {
     for (var i in chords) {
         if (i == 0) {
-            chords[i].moving(mouseX, 0, 10000000);
+            if(duration == undefined){
+                chords[i].moving(mouseX, 999999);
+            }
+            chords[i].moving(mouseX, duration);
         } else if (i + 1 == null) {
-            chords[i].moving(mouseX, 0, 10000000);
+            if(duration == undefined){
+                chords[i].moving(mouseX, 999999);
+            }
+            chords[i].moving(mouseX, duration);
         } else {
-            chords[i].moving(mouseX, 0, 10000000);
+            if(duration == undefined){
+                chords[i].moving(mouseX, 999999);
+            }
+            chords[i].moving(mouseX, duration);
         }
     }
 }
